@@ -1,4 +1,5 @@
-console.log("Welcome to The Address Book Problem!!!") 
+const prompt = require('prompt-sync')();
+
 const NAME_REGEX = RegExp("^[A-Z]{1}[a-z]{2,}$");
 const ADDRESS_STATE_CITY_REGEX = RegExp("^[A-Za-z]{4,}$");
 const ZIP_CODE_REGEX = RegExp("^[1-9]{1}[0-9]{5}$");
@@ -55,6 +56,42 @@ class AddressBook {
     }
 }
 
+let addressBookArray = new Array();
+let getContact = () => {
+    let firstName = prompt("Enter First Name : ");
+    let lastName = prompt("Enter Last Name :");
+    let address = prompt("Enter Address :");
+    let city = prompt("Enter City :");
+    let state = prompt("Enter State :");
+    let zipCode = prompt("Enter Zip Code :");
+    let phoneNumber = prompt("Enter Phone Number :");
+    let email = prompt("Enter Email :");
+    let contactInput = null;
 
-let addressBook = new AddressBook("Rinku", "Berde", "Kandivali", "Mumbai", "Maharashtra", "421133", "91-1234567896", "rinku@gmail.com");
-console.log(addressBook.toString());
+    try {
+        contactInput = new AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber, email);
+        console.log(contactInput.toString());
+    }
+    catch (error) {
+        console.error(error);
+    }
+    return contactInput;
+};
+
+let addContact = (contact) => {
+    addressBookArray.push(contact);
+    console.log("Contact Added Successfully!!");
+}
+
+console.log(" Welcome to Address Book Application.")
+while (true) {
+    console.log("Menu\n1. Add Contact\n2. Exit");
+    let choice = prompt("Enter your choice : ");
+    switch (choice) {
+        case "1": addContact(getContact());
+            break;
+        case "2": break;
+        default: console.log("Invalid Choice!!!");
+            break;
+    }
+}
