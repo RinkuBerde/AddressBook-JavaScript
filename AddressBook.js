@@ -3,7 +3,7 @@ const prompt = require('prompt-sync')();
 const NAME_REGEX = RegExp("^[A-Z]{1}[a-z]{2,}$");
 const ADDRESS_STATE_CITY_REGEX = RegExp("^[A-Za-z]{4,}$");
 const ZIP_CODE_REGEX = RegExp("^[1-9]{1}[0-9]{5}$");
-const PHONE_NUMBER_REGEX = RegExp("^[0-9]{0,2}[-][0-9]{10}$");
+const PHONE_NUMBER_REGEX = RegExp("^[0-9]{2}|\s|[0-9]{10}$");
 const EMAIL_REGEX = RegExp("^([a-z]+)([0-9])*([_+-.]{1}[a-z0-9]+)*(@)([a-z0-9]+)[.]([a-z]{2,})([.][a-z]{2}){0,1}$");
 
 class AddressBook {
@@ -70,7 +70,6 @@ let getContact = () => {
 
     try {
         contactInput = new AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber, email);
-        console.log(contactInput.toString());
     }
     catch (error) {
         console.error(error);
@@ -78,19 +77,36 @@ let getContact = () => {
     return contactInput;
 };
 
+
 let addContact = (contact) => {
     addressBookArray.push(contact);
     console.log("Contact Added Successfully!!");
 }
 
+let editContact = () =>{
+    let firstName = prompt("Enter First Name : ");
+    let lastName = prompt("Enter Last Name : ");
+    let resultIndex = addressBookArray.findIndex(contact => contact.firstName == firstName && contact.lastName == lastName);
+    if(resultIndex == -1){
+        console.log("Contact not Exists.")
+    }else{
+        addressBookArray[resultIndex] = getContact();
+        console.log("Contact updated successfully!!")
+    }
+}
+
 console.log(" Welcome to Address Book Application.")
 while (true) {
-    console.log("Menu\n1. Add Contact\n2. Exit");
+    console.log("Menu\n1. Add Contact\n2. View Contacts\n3.Edit Contact");
     let choice = prompt("Enter your choice : ");
     switch (choice) {
         case "1": addContact(getContact());
             break;
-        case "2": break;
+        case "2":
+                console.log(addressBookArray);        
+                break;
+        case "3": editContact();
+                break;
         default: console.log("Invalid Choice!!!");
             break;
     }
