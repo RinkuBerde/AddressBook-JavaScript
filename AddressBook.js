@@ -3,7 +3,7 @@ const prompt = require('prompt-sync')();
 const NAME_REGEX = RegExp("^[A-Z]{1}[a-z]{2,}$");
 const ADDRESS_STATE_CITY_REGEX = RegExp("^[A-Za-z]{4,}$");
 const ZIP_CODE_REGEX = RegExp("^[1-9]{1}[0-9]{5}$");
-const PHONE_NUMBER_REGEX = RegExp("^[0-9]{2}|\s|[0-9]{10}$");
+const PHONE_NUMBER_REGEX = RegExp("'^[0-9]{2}|\s|[0-9]{10}$");
 const EMAIL_REGEX = RegExp("^([a-z]+)([0-9])*([_+-.]{1}[a-z0-9]+)*(@)([a-z0-9]+)[.]([a-z]{2,})([.][a-z]{2}){0,1}$");
 
 class AddressBook {
@@ -56,6 +56,7 @@ class AddressBook {
     }
 }
 
+
 let addressBookArray = new Array();
 let getContact = () => {
     let firstName = prompt("Enter First Name : ");
@@ -77,37 +78,62 @@ let getContact = () => {
     return contactInput;
 };
 
-
 let addContact = (contact) => {
-    addressBookArray.push(contact);
-    console.log("Contact Added Successfully!!");
+    let resultIndex = getIndexByName(contact.firstName, contact.lastName);
+    if (resultIndex == -1) {
+        addressBookArray.push(contact);
+        console.log("Contact Added Successfully!!");
+    } else {
+        console.log("Could not add contact as Name already exists!!");
+    }
 }
 
-let editContact = () =>{
+let editContact = () => {
     let firstName = prompt("Enter First Name : ");
     let lastName = prompt("Enter Last Name : ");
     let resultIndex = addressBookArray.findIndex(contact => contact.firstName == firstName && contact.lastName == lastName);
-    if(resultIndex == -1){
+    if (resultIndex == -1) {
         console.log("Contact not Exists.")
-    }else{
+    } else {
         addressBookArray[resultIndex] = getContact();
         console.log("Contact updated successfully!!")
     }
 }
 
+let getIndexByName = (firstName, lastName) => {
+    return addressBookArray.findIndex(contact => contact.firstName == firstName && contact.lastName == lastName);
+}
+
+
+let deleteContact = () => {
+    let firstName = prompt("Enter First Name : ");
+    let lastName = prompt("Enter Lastt Name : ");
+    let index = getIndexByName(firstName, lastName);
+    if (index == -1)
+        console.log("Contact not Exists.")
+    else {
+        console.log("Contact deleted successfully!!");
+        return addressBookArray.splice(index, 1);
+
+    }
+}
 console.log(" Welcome to Address Book Application.")
 while (true) {
-    console.log("Menu\n1. Add Contact\n2. View Contacts\n3.Edit Contact");
+    console.log("Menu\n1. Add Contact\n2. View Contacts\n3.Edit Contact\n4. Delete Contact");
     let choice = prompt("Enter your choice : ");
     switch (choice) {
         case "1": addContact(getContact());
             break;
         case "2":
-                console.log(addressBookArray);        
-                break;
+            console.log(addressBookArray);
+            
+            break;
         case "3": editContact();
-                break;
+            break;
+        case "4": deleteContact();
+            break;
         default: console.log("Invalid Choice!!!");
             break;
     }
+    
 }
